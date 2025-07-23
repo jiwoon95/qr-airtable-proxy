@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>QR → Airtable</title>
+</head>
+<body>
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+
+    if (code) {
+      fetch('/.netlify/functions/post-to-airtable', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ qr: code })
+      })
+      .then(res => res.json())
+      .then(data => document.body.innerHTML = "<h2>성공적으로 전송되었습니다!</h2>")
+      .catch(err => document.body.innerHTML = "<h2>에러 발생: " + err.message + "</h2>");
+    } else {
+      document.body.innerHTML = "<h2>QR 코드 정보가 없습니다.</h2>";
+    }
+  </script>
+</body>
+</html>
