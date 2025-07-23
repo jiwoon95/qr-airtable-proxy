@@ -5,8 +5,9 @@
 </head>
 <body>
   <script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const code = urlParams.get('code');
+    // URL 경로에서 자재코드 추출: /U123456 → "U123456"
+    const path = window.location.pathname;
+    const code = path.startsWith('/') ? path.slice(1) : path;
 
     if (code) {
       fetch('/.netlify/functions/post-to-airtable', {
