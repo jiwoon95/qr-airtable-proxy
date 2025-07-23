@@ -1,25 +1,21 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>QR → Airtable</title>
-</head>
+<head><title>QR 저장</title></head>
 <body>
   <script>
-    // URL 경로에서 자재코드 추출: /U123456 → "U123456"
-    const path = window.location.pathname;
-    const code = path.startsWith('/') ? path.slice(1) : path;
+    const url = new URL(window.location.href);
+    const code = url.searchParams.get('code');
 
     if (code) {
-      fetch('/.netlify/functions/post-to-airtable', {
+      fetch('/.netlify/functions/post-to-notion', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ qr: code })
       })
-      .then(res => res.json())
-      .then(data => document.body.innerHTML = "<h2>성공적으로 전송되었습니다!</h2>")
-      .catch(err => document.body.innerHTML = "<h2>에러 발생: " + err.message + "</h2>");
+      .then(() => document.body.innerHTML = "<h2>Notion에 저장 완료!</h2>")
+      .catch(err => document.body.innerHTML = "<h2>실패: " + err.message + "</h2>");
     } else {
-      document.body.innerHTML = "<h2>QR 코드 정보가 없습니다.</h2>";
+      document.body.innerHTML = "<h2>QR 코드가 없습니다.</h2>";
     }
   </script>
 </body>
